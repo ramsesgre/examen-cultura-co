@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Culture Under Pressure</title>
+<style>
+  :root{--azul:#1F3864;--azul2:#2F5597;--claro:#EEF2F9;--gris:#5f6b7a;--ok:#2e7d32;--mal:#b3261e;--aviso:#8a5a00}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--claro);color:#1b2430;line-height:1.5}
+  header{background:var(--azul);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+  .marca{font-weight:bold;letter-spacing:1px}
+  #crono{font-variant-numeric:tabular-nums;background:#ffffff22;padding:4px 10px;border-radius:14px;font-size:14px}
+  #banner{padding:10px 18px;font-size:14px}
+  #banner.info{background:#fff4d6;color:var(--aviso)}
+  #banner.error{background:#fde7e5;color:var(--mal)}
+  #banner.demo{background:#e3f2fd;color:#0d47a1}
+  main{max-width:760px;margin:22px auto;padding:0 16px}
+  .pantalla{display:none;background:#fff;border-radius:12px;padding:26px;box-shadow:0 2px 10px #0001}
+  .pantalla.activa{display:block}
+  h1{font-size:24px;margin:0 0 6px;color:var(--azul)} h2{font-size:19px;margin:18px 0 6px;color:var(--azul)}
+  p.sub{color:var(--gris);margin-top:0}
+  label{display:block;font-weight:bold;margin:14px 0 4px}
+  input[type=text],input[type=password],textarea{width:100%;padding:12px;font-size:17px;border:1px solid #b8c2d1;border-radius:8px;font-family:inherit}
+  textarea{resize:vertical;min-height:90px}
+  button{font-size:16px;padding:12px 20px;border:0;border-radius:8px;cursor:pointer;background:var(--azul2);color:#fff;font-weight:bold;margin:10px 8px 0 0}
+  button.sec{background:#fff;color:var(--azul2);border:2px solid var(--azul2)}
+  button.rojo{background:var(--mal)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .err{color:var(--mal);margin-top:10px;min-height:20px;font-size:15px}
+  .caja{background:var(--claro);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .confirma{font-size:19px;background:var(--claro);padding:16px;border-radius:10px;border-left:5px solid var(--azul2)}
+  .aviso{max-height:340px;overflow:auto;border:1px solid #b8c2d1;border-radius:8px;padding:6px 16px;font-size:14.5px;background:#fafbfd}
+  .aviso li{margin-bottom:6px}
+  .marca-pend{background:#fff3b0;padding:0 3px;border-radius:3px}
+  .pregunta{font-size:21px;font-weight:bold;color:var(--azul);margin:10px 0 14px}
+  .barra{height:14px;background:#d9e1ee;border-radius:8px;overflow:hidden;margin:10px 0}
+  .barra>div{height:100%;width:0;background:var(--azul2);transition:width .25s linear}
+  .estado{font-size:15px;color:var(--gris)}
+  .rec{display:inline-block;width:12px;height:12px;border-radius:50%;background:#d32f2f;margin-right:6px;animation:p 1s infinite}
+  @keyframes p{50%{opacity:.25}}
+  .cuenta{font-size:72px;font-weight:bold;text-align:center;color:var(--azul2);margin:10px 0}
+  video,audio{width:100%;border-radius:10px;background:#000;max-height:360px}
+  audio{background:none}
+  .trans{background:#fafbfd;border:1px dashed #b8c2d1;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:15px;min-height:44px;white-space:pre-wrap}
+  .medidor{height:10px;background:#d9e1ee;border-radius:6px;overflow:hidden;margin-top:8px}
+  .medidor>div{height:100%;width:0;background:var(--ok)}
+  .chat{height:380px;overflow:auto;background:#fafbfd;border:1px solid #cfd8e6;border-radius:10px;padding:12px;margin:12px 0}
+  .m{max-width:82%;padding:9px 13px;border-radius:12px;margin:8px 0;white-space:pre-wrap}
+  .m.ceo{background:#e6ebf5;margin-right:auto}
+  .m.alumno{background:var(--azul2);color:#fff;margin-left:auto}
+  .m small{display:block;opacity:.7;font-size:11px;margin-bottom:2px}
+  .nota{font-size:64px;font-weight:bold;color:var(--azul);text-align:center;margin:6px 0}
+  .oculto{display:none!important}
+  ul.reglas{padding-left:20px} ul.reglas li{margin:6px 0}
+  footer{text-align:center;color:var(--gris);font-size:12px;margin:18px 0 30px}
+  @media(max-width:520px){.pantalla{padding:18px}.pregunta{font-size:18px}}
+</style>
+</head>
+<body>
+<header>
+  <span class="marca">CULTURE UNDER PRESSURE</span>
+  <span id="crono" class="oculto">⏱ --:--</span>
+</header>
+<div id="banner" class="oculto"></div>
+
+<main>
+<!-- 1. ACCESO -->
+<section id="s-acceso" class="pantalla">
+  <h1>Bienvenida / Bienvenido</h1>
+  <p class="sub">Escribe tu número de cuenta para comenzar.</p>
+  <label for="i-cuenta">Número de cuenta</label>
+  <input id="i-cuenta" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="Ej. 2672884">
+  <button id="b-ident">Continuar</button>
+  <div class="err" id="e-acceso"></div>
+</section>
+
+<!-- 2. CONFIRMACIÓN -->
+<section id="s-codigo" class="pantalla">
+  <h1>Verificación de identidad</h1>
+  <div class="confirma" id="t-confirma"></div>
+  <div id="paso-confirma">
+    <button id="b-si">Sí, soy yo</button>
+    <button id="b-no" class="sec">No soy yo</button>
+  </div>
+  <div class="err" id="e-codigo"></div>
+</section>
+
+<!-- 3. AVISO DE PRIVACIDAD -->
+<section id="s-aviso" class="pantalla">
+  <h1>Aviso de privacidad</h1>
+  <p class="sub">Versión <span id="v-aviso"></span>. Léelo completo antes de continuar.</p>
+  <div class="aviso">
+    <h2>1. Quién es responsable</h2>
+    <p>El responsable del tratamiento de tus datos es <span class="marca-pend">Universidad Autónoma del Estado de México (UAEMéx)</span>, a través del profesor de la asignatura <span class="marca-pend">Erin Ramsés Rodríguez Guzmán</span>.</p>
+    <h2>2. Qué datos se recaban</h2>
+    <ul>
+      <li>Datos de identificación: número de cuenta, nombre y correo institucional.</li>
+      <li>Tu <b>voz</b> (grabaciones de audio) y tu <b>imagen</b> (grabaciones de video con audio) durante las etapas 1 y 2.</li>
+      <li>Las <b>transcripciones</b> de esas grabaciones, tus <b>respuestas escritas</b> y la <b>conversación completa</b> de la etapa 3.</li>
+      <li>Datos técnicos de la sesión: fecha y hora de entrada y salida, avance, y si cámara y micrófono funcionaron. La comprobación de permisos <b>no</b> se graba.</li>
+    </ul>
+    <h2>3. Para qué se usan</h2>
+    <p>Únicamente para aplicar y evaluar este examen: verificar tu identidad, recuperar tu avance si se interrumpe tu conexión, calcular una <b>calificación provisional</b> y permitir que tu profesor la revise. No se usan para fines publicitarios ni se venden o ceden a terceros con otros fines.</p>
+    <h2>4. Uso de inteligencia artificial</h2>
+    <p>Un sistema de inteligencia artificial (Gemini) genera las preguntas del interlocutor de la etapa 3, transcribe o analiza tus respuestas y propone una calificación <b>provisional</b>. Esa calificación <b>no es definitiva</b>: tu profesor puede revisarla y modificarla.</p>
+    <h2>5. Dónde se almacenan y quién interviene</h2>
+    <p>La información se almacena en servicios de Google (Drive, Hojas de cálculo y Apps Script) administrados por el profesor, y se procesa con la API de Gemini de Google. Esos proveedores tienen sus propias condiciones y plazos técnicos de conservación, ajenos al control del profesor.</p>
+    <h2>6. Cuánto tiempo se conservan</h2>
+    <ul>
+      <li>Las grabaciones, transcripciones y conversaciones se eliminan dentro de los <b>7 días naturales</b> posteriores a la aplicación del examen.</li>
+      <li>Si durante esos 7 días solicitas la <b>revisión de tu calificación</b> o presentas una queja, se conservarán únicamente hasta que se resuelva y después se eliminarán.</li>
+      <li>Tu calificación académica se conserva conforme a la normativa de la institución.</li>
+    </ul>
+    <h2>7. Tus derechos</h2>
+    <p>Puedes solicitar el acceso, la rectificación, la cancelación o la oposición al tratamiento de tus datos escribiendo a tu profesor conforme a la normativa aplicable.</p>
+    <h2>8. Consentimiento</h2>
+    <p>Al marcar la casilla aceptas expresamente el tratamiento temporal de tus datos, <b>voz, imagen y respuestas académicas</b> para los fines descritos. Si no aceptas, no podrás presentar el examen por este medio y deberás comunicarlo a tu profesor.</p>
+  </div>
+  <label style="font-weight:normal;margin-top:14px"><input type="checkbox" id="c-acepto"> He leído el aviso de privacidad y <b>acepto</b> el tratamiento de mis datos, voz, imagen y respuestas académicas.</label>
+  <button id="b-acepto" disabled>Aceptar y continuar</button>
+  <div class="err" id="e-aviso"></div>
+</section>
+
+<!-- 4. PERMISOS -->
+<section id="s-permisos" class="pantalla">
+  <h1>Cámara y micrófono</h1>
+  <p class="sub">Necesitamos comprobar que ambos funcionan. <b>Esta comprobación no se graba.</b></p>
+  <button id="b-perm">Activar cámara y micrófono</button>
+  <div id="perm-ok" class="oculto">
+    <video id="v-perm" autoplay muted playsinline></video>
+    <p class="estado">Habla: la barra verde debe moverse. Si te ves y la barra se mueve, todo está bien.</p>
+    <div class="medidor"><div id="med"></div></div>
+    <button id="b-perm-sig">Todo funciona, continuar</button>
+  </div>
+  <div class="err" id="e-perm"></div>
+  <div class="caja">Consejos: lugar silencioso, buena luz de frente, tu cara visible, y no cierres esta pestaña durante el examen.</div>
+</section>
+
+<!-- INSTRUCCIONES ETAPAS -->
+<section id="s-inst1" class="pantalla">
+  <h1>Etapa 1 · Entrevista oral</h1>
+  <p class="sub">Eres jefa o jefe de cultura organizacional de una empresa. Te harán <span class="k-n1">6</span> preguntas.</p>
+  <ul class="reglas">
+    <li>Para cada pregunta: se leerá en voz alta (puedes volver a escucharla), pulsa <b>Responder</b> y habla.</li>
+    <li>Tienes <b>máximo <span class="k-s1">30</span> segundos</b>. Si terminas antes, pulsa <b>Finalizar respuesta</b>.</li>
+    <li>Se graba tu voz. Al terminar podrás <b>escuchar tu respuesta</b>, pero <b>no se puede repetir</b>.</li>
+    <li>No puedes regresar a una pregunta anterior.</li>
+  </ul>
+  <button id="b-et1">Comenzar etapa 1</button>
+  <div class="err" id="e-inst1"></div>
+</section>
+
+<section id="s-inst2" class="pantalla">
+  <h1>Etapa 2 · Entrevista en video</h1>
+  <p class="sub">Ahora responderás <span class="k-n2">3</span> preguntas frente a la cámara.</p>
+  <ul class="reglas">
+    <li>Se lee la pregunta, pulsas <b>Responder</b> y, tras una cuenta regresiva de 3 segundos, se enciende la cámara y comienza a grabar.</li>
+    <li>Tienes <b>máximo <span class="k-s2">60</span> segundos</b>. Puedes terminar antes con <b>Finalizar respuesta</b>.</li>
+    <li>Al terminar podrás <b>ver tu video</b>, pero <b>no se puede repetir</b>.</li>
+    <li>Mantén tu rostro visible y habla con claridad.</li>
+  </ul>
+  <button id="b-et2">Comenzar etapa 2</button>
+  <div class="err" id="e-inst2"></div>
+</section>
+
+<section id="s-inst3" class="pantalla">
+  <h1>Etapa 3 · Negociación con el CEO</h1>
+  <p class="sub">Conversarás por escrito con el director general de una empresa ficticia que necesita reestructurar su cultura organizacional.</p>
+  <ul class="reglas">
+    <li>Tú representas a la jefatura de cultura organizacional; el CEO tiene sus propios intereses.</li>
+    <li>La conversación debe tener <b>al menos <span class="k-min">12</span> turnos</b> (un turno = un mensaje del CEO y tu respuesta). El máximo es de <span class="k-max">20</span>.</li>
+    <li>Para cerrar con éxito debes llegar a una solución que incluya: <b>diagnóstico, causas, solución, viabilidad, ética, indicadores y plan de implementación</b>.</li>
+    <li>Si no se alcanza una solución, tu profesor revisará la conversación; no quedarás bloqueada o bloqueado.</li>
+  </ul>
+  <button id="b-et3">Comenzar etapa 3</button>
+  <div class="err" id="e-inst3"></div>
+</section>
+
+<!-- PREGUNTA (audio / video) -->
+<section id="s-preg" class="pantalla">
+  <h1 id="p-titulo"></h1>
+  <div class="pregunta" id="p-texto"></div>
+  <div id="p-listo">
+    <button id="b-oir" class="sec">🔊 Escuchar pregunta</button>
+    <button id="b-resp">● Responder</button>
+  </div>
+  <div id="p-cuenta" class="oculto"><p class="estado" style="text-align:center">La grabación comienza en…</p><div class="cuenta" id="n-cuenta">3</div></div>
+  <div id="p-grab" class="oculto">
+    <video id="v-vivo" autoplay muted playsinline class="oculto"></video>
+    <p><span class="rec"></span><b id="t-grab">Grabando…</b> <span class="estado" id="t-seg"></span></p>
+    <div class="barra"><div id="barra"></div></div>
+    <div class="trans" id="t-vivo"></div>
+    <button id="b-fin" class="rojo">■ Finalizar respuesta</button>
+  </div>
+  <div id="p-rev" class="oculto">
+    <h2 id="t-rev">Tu respuesta</h2>
+    <audio id="r-audio" controls class="oculto"></audio>
+    <video id="r-video" controls playsinline class="oculto"></video>
+    <div class="estado" style="margin-top:8px">Transcripción automática (puede tener errores):</div>
+    <div class="trans" id="r-trans"></div>
+    <button id="b-env">Enviar y continuar</button>
+    <p class="estado">No se puede repetir la respuesta. Al enviar, se guarda tu grabación.</p>
+  </div>
+  <div id="p-sub" class="oculto"><p class="estado"><b>Guardando tu respuesta… no cierres la página.</b></p><div class="barra"><div id="barra-sub" style="width:60%"></div></div></div>
+  <div class="err" id="e-preg"></div>
+  <button id="b-reint" class="oculto">Reintentar envío</button>
+</section>
+
+<!-- CHAT -->
+<section id="s-chat" class="pantalla">
+  <h1>Etapa 3 · Negociación</h1>
+  <p class="estado" id="t-turnos"></p>
+  <div class="chat" id="chat"></div>
+  <textarea id="i-msg" placeholder="Escribe tu respuesta al CEO…"></textarea>
+  <button id="b-msg">Enviar</button>
+  <button id="b-ceo-reint" class="sec oculto">Reintentar respuesta del CEO</button>
+  <button id="b-cerrar" class="sec oculto">Finalizar negociación</button>
+  <div class="err" id="e-chat"></div>
+</section>
+
+<!-- FINAL -->
+<section id="s-final" class="pantalla">
+  <h1>Has terminado el examen</h1>
+  <p class="sub" id="f-estado">Estamos preparando tu calificación provisional…</p>
+  <div id="f-res" class="oculto">
+    <div class="nota" id="f-nota"></div>
+    <p style="text-align:center" class="estado">Calificación <b>provisional</b>, sujeta a revisión por el profesor.</p>
+    <div class="caja" id="f-retro"></div>
+  </div>
+  <div class="err" id="e-final"></div>
+  <button id="b-final-reint" class="oculto">Reintentar</button>
+</section>
+
+<!-- BLOQUEO -->
+<section id="s-bloqueo" class="pantalla">
+  <h1 id="bl-titulo">Aviso</h1>
+  <p id="bl-texto"></p>
+</section>
+</main>
+<footer>Culture Under Pressure · Evaluación de Cultura Organizacional</footer>
+
+<script>
+'use strict';
+/* =====================================================================
+   CONFIGURACIÓN
+   (Gemini y la API key viven ahora SOLO en el servidor: Code.gs)
+   ===================================================================== */
+const AVISO_VERSION = 'v1.0';
+// Dentro de Apps Script la página usa google.script.run (no hay que configurar nada).
+// API_URL solo se llena si algún día alojas este archivo FUERA de Apps Script (termina en /exec).
+const EN_APPS_SCRIPT = (typeof google !== 'undefined') && google.script && google.script.run;
+const API_URL = 'https://script.google.com/macros/s/AKfycbzUQS_TY8WJg52Mdhdug2UiN9Ui_jY3FhJyjKGADKaaRK5S63wuBXyypGrOXqyaelTRow/exec';
+const API_CONFIGURADA = /^https:\/\/script\.google\.com\/macros\/s\/[^\s]+\/exec$/.test(API_URL);
+// Estos valores son solo de arranque: al iniciar sesión se reemplazan por los de la pestaña Config.
+let LIM_AUDIO = 30, LIM_VIDEO = 60, MIN_TURNOS = 12, MAX_TURNOS = 20, N_E1 = 6, N_E2 = 3;
+function aplicarConfig(c){
+  if(!c) return;
+  N_E1=c.n_e1; N_E2=c.n_e2; LIM_AUDIO=c.seg_e1; LIM_VIDEO=c.seg_e2; MIN_TURNOS=c.turnos_min; MAX_TURNOS=c.turnos_max;
+}
+
+/* =====================================================================
+   ESTADO
+   ===================================================================== */
+const S = { cuenta:'', nombre:'', session_id:'', token:'', etapa:1, restantes:null, preguntas:[], idx:0,
+            tipo:'audio', rec:null, pendiente:null, chat:{mensajes:[],turnos:0,puede_cerrar:false}, hb:null, tick:null, bloqueado:false };
+const $ = id => document.getElementById(id);
+const LS = 'cup_sesion_v1';
+
+/* =====================================================================
+   UTILIDADES DE INTERFAZ
+   ===================================================================== */
+function mostrar(id){ document.querySelectorAll('.pantalla').forEach(p=>p.classList.remove('activa')); $(id).classList.add('activa'); window.scrollTo(0,0); }
+function err(id,t){ $(id).textContent=t||''; }
+function banner(t,tipo){ const b=$('banner'); if(!t){b.className='oculto';return;} b.textContent=t; b.className=tipo||'info'; }
+function bloquear(titulo,texto){ S.bloqueado=true; clearInterval(S.hb); clearInterval(S.tick); $('bl-titulo').textContent=titulo; $('bl-texto').textContent=texto; mostrar('s-bloqueo'); }
+function fmt(s){ s=Math.max(0,Math.floor(s)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+const esperar = ms => new Promise(r=>setTimeout(r,ms));
+
+/* =====================================================================
+   COMUNICACIÓN CON EL SERVIDOR (google.script.run dentro de Apps Script; fetch si está alojado fuera)
+   ===================================================================== */
+function api(accion, datos){
+  const cuerpo = JSON.stringify(Object.assign({accion:accion, session_id:S.session_id, token:S.token}, datos||{}));
+  if(EN_APPS_SCRIPT){
+    return new Promise(resolve=>{
+      let intentos=0;
+      (function intentar(){
+        google.script.run
+          .withSuccessHandler(txt=>{
+            try{ resolve(JSON.parse(txt)); }
+            catch(e){ resolve({ok:false,codigo:'RESPUESTA_INVALIDA',mensaje:'Respuesta no válida del servidor. Intenta de nuevo.'}); }
+          })
+          .withFailureHandler(()=>{
+            if(++intentos<3) setTimeout(intentar,1200*intentos);
+            else resolve({ok:false,codigo:'SIN_CONEXION',mensaje:'No hay conexión con el servidor. Revisa tu internet; tu avance está guardado.'});
+          })
+          .rpc(cuerpo);
+      })();
+    });
+  }
+  return apiFetch(cuerpo);
+}
+async function apiFetch(cuerpo){
+  for(let i=0;i<3;i++){
+    try{
+      const r = await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:cuerpo});
+      return await r.json();
+    }catch(e){ await esperar(1200*(i+1)); }
+  }
+  return {ok:false,codigo:'SIN_CONEXION',mensaje:'No hay conexión con el servidor. Revisa tu internet; tu avance está guardado.'};
+}
+function errorGlobal(r){
+  if(r.codigo==='TIEMPO_AGOTADO'){ bloquear('Se terminó el tiempo','El tiempo del examen se agotó. Avisa a tu profesor; tu avance quedó guardado.'); return true; }
+  if(r.codigo==='ACCESO_CERRADO'){ bloquear('Examen finalizado', r.mensaje||'Tu examen ya está finalizado.'); return true; }
+  if(r.codigo==='SESION_INVALIDA'){ try{localStorage.removeItem(LS);}catch(_){} bloquear('Sesión no válida','Vuelve a abrir la página e inicia sesión de nuevo.'); return true; }
+  return false;
+}
+
+/* =====================================================================
+   CRONÓMETRO Y LATIDO
+   ===================================================================== */
+function iniciarReloj(){
+  $('crono').classList.remove('oculto');
+  clearInterval(S.tick); clearInterval(S.hb);
+  S.tick=setInterval(()=>{
+    if(S.restantes===null) return;
+    S.restantes=Math.max(0,S.restantes-1); $('crono').textContent='⏱ '+fmt(S.restantes);
+    if(S.restantes===600) banner('Quedan 10 minutos.','info');
+    if(S.restantes===60) banner('Queda 1 minuto.','error');
+  },1000);
+  S.hb=setInterval(async()=>{
+    if(S.bloqueado||S.rec&&S.rec.activo) return;
+    const r=await api('estado'); if(r.ok){ S.restantes=r.segundos_restantes; } else errorGlobal(r);
+  },45000);
+}
+
+/* =====================================================================
+   PASO 1 y 2: IDENTIFICACIÓN
+   ===================================================================== */
+$('b-ident').onclick = async ()=>{
+  err('e-acceso',''); const c=$('i-cuenta').value.trim();
+  if(!/^\d{5,10}$/.test(c)) return err('e-acceso','Escribe tu número de cuenta (solo números).');
+  $('b-ident').disabled=true; const r=await api('identificar',{cuenta:c}); $('b-ident').disabled=false;
+  if(!r.ok) return err('e-acceso', r.mensaje);
+  S.cuenta=c; S.nombre=r.nombre;
+  $('t-confirma').innerHTML='Este número de cuenta pertenece a <b></b>.<br>¿Confirmas que eres tú?';
+  $('t-confirma').querySelector('b').textContent=r.nombre;
+  err('e-codigo','');
+  mostrar('s-codigo');
+};
+$('i-cuenta').addEventListener('keydown',e=>{ if(e.key==='Enter') $('b-ident').click(); });
+$('b-no').onclick = ()=>{ $('i-cuenta').value=''; mostrar('s-acceso'); };
+
+$('b-si').onclick = async ()=>{
+  err('e-codigo','');
+  let guardado=null; try{ guardado=JSON.parse(localStorage.getItem(LS)||'null'); }catch(_){}
+  const token = guardado && guardado.cuenta===S.cuenta ? guardado.token : '';
+  $('b-si').disabled=true; $('b-no').disabled=true;
+  const r=await api('iniciar_sesion',{cuenta:S.cuenta,codigo:'',token:token,dispositivo:navigator.userAgent.slice(0,80)});
+  $('b-si').disabled=false; $('b-no').disabled=false;
+  if(!r.ok){ if(!errorGlobal(r)) err('e-codigo', r.mensaje); return; }
+  S.session_id=r.session_id; S.token=r.token; S.etapa=r.etapa_actual; S.restantes=r.segundos_restantes; aplicarConfig(r.config);
+  try{ localStorage.setItem(LS,JSON.stringify({cuenta:S.cuenta,session_id:r.session_id,token:r.token})); }catch(_){}
+  iniciarReloj(); $('crono').textContent='⏱ '+fmt(S.restantes);
+  if(r.reanudada) banner('Recuperamos tu avance. Continúa donde te quedaste.','info');
+  if(!r.aviso_aceptado){ $('v-aviso').textContent=AVISO_VERSION; return mostrar('s-aviso'); }
+  if(!r.permisos_ok) return mostrar('s-permisos');
+  entrarEtapa(S.etapa);
+};
+
+/* =====================================================================
+   PASO 3: AVISO DE PRIVACIDAD
+   ===================================================================== */
+$('c-acepto').onchange = ()=>{ $('b-acepto').disabled=!$('c-acepto').checked; };
+$('b-acepto').onclick = async ()=>{
+  err('e-aviso',''); $('b-acepto').disabled=true;
+  const r=await api('consentimiento',{acepta:true,version:AVISO_VERSION});
+  if(!r.ok){ $('b-acepto').disabled=false; if(!errorGlobal(r)) err('e-aviso',r.mensaje); return; }
+  mostrar('s-permisos');
+};
+
+/* =====================================================================
+   PASO 4: PERMISOS (no se graba nada)
+   ===================================================================== */
+const AYUDA_PERMISOS = ' Permite el acceso en el candado de la barra de direcciones y vuelve a intentar. Usa Chrome o Edge y abre el enlace directamente en su propia pestaña (no dentro de Moodle, Sites u otra página).';
+let permStream=null, permCtx=null, permRaf=0;
+$('b-perm').onclick = async ()=>{
+  err('e-perm','');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)
+    return err('e-perm','Este navegador no permite usar cámara y micrófono en esta página.'+AYUDA_PERMISOS);
+  try{
+    permStream = await navigator.mediaDevices.getUserMedia({audio:true,video:true});
+  }catch(e){
+    return err('e-perm','No se pudo acceder a la cámara o el micrófono ('+(e.name||'error')+': '+(e.message||'')+').'+AYUDA_PERMISOS);
+  }
+  $('v-perm').srcObject=permStream; $('perm-ok').classList.remove('oculto'); $('b-perm').classList.add('oculto');
+  try{
+    permCtx=new (window.AudioContext||window.webkitAudioContext)(); const an=permCtx.createAnalyser(); an.fftSize=256;
+    permCtx.createMediaStreamSource(permStream).connect(an); const d=new Uint8Array(an.frequencyBinCount);
+    (function loop(){ an.getByteFrequencyData(d); let s=0; for(const v of d) s+=v; $('med').style.width=Math.min(100,s/d.length*2.2)+'%'; permRaf=requestAnimationFrame(loop); })();
+  }catch(_){}
+};
+$('b-perm-sig').onclick = async ()=>{
+  const v=permStream.getVideoTracks().length>0, a=permStream.getAudioTracks().length>0;
+  cancelAnimationFrame(permRaf); permStream.getTracks().forEach(t=>t.stop()); if(permCtx) permCtx.close();
+  const r=await api('permisos',{camara:v,microfono:a});
+  if(!r.ok){ if(!errorGlobal(r)) err('e-perm',r.mensaje); return; }
+  entrarEtapa(S.etapa);
+};
+
+/* =====================================================================
+   ETAPAS: instrucciones
+   ===================================================================== */
+function entrarEtapa(n){
+  S.etapa=n;
+  const poner=(cl,v)=>document.querySelectorAll(cl).forEach(e=>e.textContent=v);
+  poner('.k-min',MIN_TURNOS); poner('.k-max',MAX_TURNOS); poner('.k-n1',N_E1); poner('.k-n2',N_E2); poner('.k-s1',LIM_AUDIO); poner('.k-s2',LIM_VIDEO);
+  if(n<=1) return mostrar('s-inst1');
+  if(n===2) return mostrar('s-inst2');
+  if(n===3) return mostrar('s-inst3');
+  return finalizarExamen();
+}
+$('b-et1').onclick = ()=>cargarPreguntas(1,'audio','e-inst1');
+$('b-et2').onclick = ()=>cargarPreguntas(2,'video','e-inst2');
+$('b-et3').onclick = ()=>iniciarChat();
+
+async function cargarPreguntas(etapa,tipo,errId){
+  err(errId,'');
+  const r=await api('asignar_preguntas',{etapa:etapa});
+  if(!r.ok){ if(!errorGlobal(r)) err(errId,r.mensaje); return; }
+  S.tipo=tipo; S.preguntas=r.preguntas;
+  const i=S.preguntas.findIndex(p=>p.estado!=='Verificado');
+  if(i<0) return entrarEtapa(etapa+1);
+  S.idx=i; mostrarPregunta();
+}
+
+/* =====================================================================
+   PREGUNTA (voz o video)
+   ===================================================================== */
+function vista(parte){ ['p-listo','p-cuenta','p-grab','p-rev','p-sub'].forEach(id=>$(id).classList.toggle('oculto',id!==parte)); }
+function mostrarPregunta(){
+  const p=S.preguntas[S.idx], total=S.preguntas.length, esV=S.tipo==='video';
+  $('p-titulo').textContent=(esV?'Etapa 2 · Video':'Etapa 1 · Voz')+' — Pregunta '+(S.idx+1)+' de '+total;
+  $('p-texto').textContent=p.texto; err('e-preg',''); $('b-reint').classList.add('oculto');
+  vista('p-listo'); mostrar('s-preg'); hablar(p.texto);
+}
+$('b-oir').onclick = ()=>hablar(S.preguntas[S.idx].texto);
+$('b-resp').onclick = async ()=>{
+  cancelarVoz(); const esV=S.tipo==='video';
+  err('e-preg','');
+  let stream;
+  try{
+    stream=await navigator.mediaDevices.getUserMedia(esV
+      ?{audio:true, video:true}
+      :{audio:true});
+  }catch(e){
+    return err('e-preg','Error de '+(esV?'cámara/micrófono':'micrófono')+' ('+(e.name||'Error')+': '+(e.message||'')+'). Verifica los permisos del navegador.');
+  }
+  if(esV){
+    vista('p-cuenta');
+    $('v-vivo').srcObject=stream;
+    $('v-vivo').classList.remove('oculto');
+    for(let n=3;n>=1;n--){ $('n-cuenta').textContent=n; await esperar(1000); }
+  }
+  empezarGrabacion(stream);
+};
+$('b-fin').onclick = ()=>detenerGrabacion();
+
+function mimeSoportado(esV){
+  const c=esV?['video/webm;codecs=vp8,opus','video/webm','video/mp4']:['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];
+  return c.find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m))||'';
+}
+function empezarGrabacion(stream){
+  const esV=S.tipo==='video', lim=esV?LIM_VIDEO:LIM_AUDIO, mime=mimeSoportado(esV);
+  const opts={}; if(mime) opts.mimeType=mime; if(esV){opts.videoBitsPerSecond=600000;opts.audioBitsPerSecond=48000;}else opts.audioBitsPerSecond=32000;
+  const mr=new MediaRecorder(stream,opts);
+  const R=S.rec={mr:mr,stream:stream,chunks:[],t0:performance.now(),activo:true,texto:'',parcial:'',sr:null,lim:lim,mime:mr.mimeType||mime};
+  mr.ondataavailable=e=>{ if(e.data&&e.data.size) R.chunks.push(e.data); };
+  mr.onstop=()=>terminarGrabacion();
+  R.sr=iniciarTranscripcion();
+  mr.start(1000);
+  vista('p-grab'); $('v-vivo').classList.toggle('oculto',!esV); $('t-vivo').textContent=''; $('barra').style.width='0';
+  R.timer=setInterval(()=>{
+    const t=(performance.now()-R.t0)/1000; $('barra').style.width=Math.min(100,t/lim*100)+'%';
+    $('t-seg').textContent=Math.floor(t)+' / '+lim+' s';
+    if(t>=lim) detenerGrabacion();
+  },200);
+  window.onbeforeunload=e=>{ e.preventDefault(); e.returnValue=''; };
+}
+function detenerGrabacion(){
+  const R=S.rec; if(!R||!R.activo) return; R.activo=false; clearInterval(R.timer);
+  $('b-fin').disabled=true; $('t-grab').textContent='Procesando…';
+  try{ if(R.sr) R.sr.stop(); }catch(_){}
+  if(R.mr.state!=='inactive') R.mr.stop();
+}
+async function terminarGrabacion(){
+  const R=S.rec; R.stream.getTracks().forEach(t=>t.stop()); window.onbeforeunload=null;
+  await esperar(700);
+  const dur=Math.round((performance.now()-R.t0)/1000*10)/10;
+  const blob=new Blob(R.chunks,{type:R.mime||(S.tipo==='video'?'video/webm':'audio/webm')});
+  const texto=(R.texto+' '+R.parcial).replace(/\s+/g,' ').trim();
+  S.pendiente={blob:blob,duracion:Math.min(dur,R.lim),texto:texto,mime:blob.type};
+  $('b-fin').disabled=false; $('t-grab').textContent='Grabando…';
+  $('v-vivo').srcObject=null; const url=URL.createObjectURL(blob);
+  const esV=S.tipo==='video';
+  $('r-audio').classList.toggle('oculto',esV); $('r-video').classList.toggle('oculto',!esV);
+  const el=esV?$('r-video'):$('r-audio'); el.src=url; arreglarDuracion(el);
+  $('t-rev').textContent=esV?'Así quedó tu video':'Así quedó tu respuesta';
+  $('r-trans').textContent=texto||'(No se obtuvo transcripción automática. Tu grabación se guardará de todos modos.)';
+  vista('p-rev');
+}
+
+function arreglarDuracion(el){
+  el.onloadedmetadata=()=>{ if(el.duration===Infinity||isNaN(el.duration)){
+    el.currentTime=1e101; el.ontimeupdate=()=>{ el.ontimeupdate=null; el.currentTime=0; }; } };
+}
+
+function iniciarTranscripcion(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return null;
+  try{
+    const r=new SR(); r.lang='es-MX'; r.continuous=true; r.interimResults=true;
+    r.onresult=e=>{ let fin='',parc='';
+      for(let i=0;i<e.results.length;i++){ const t=e.results[i][0].transcript; if(e.results[i].isFinal) fin+=t+' '; else parc+=t; }
+      if(S.rec){ S.rec.texto=fin; S.rec.parcial=parc; $('t-vivo').textContent=(fin+parc).trim(); } };
+    r.onend=()=>{ if(S.rec&&S.rec.activo){ try{ r.start(); }catch(_){} } };
+    r.onerror=()=>{};
+    r.start();
+    return r;
+  }catch(_){ return null; }
+}
+
+function aBase64(blob){ return new Promise((ok,ko)=>{ const f=new FileReader(); f.onload=()=>ok(String(f.result).split(',')[1]); f.onerror=ko; f.readAsDataURL(blob); }); }
+$('b-env').onclick = enviarRespuesta;
+$('b-reint').onclick = enviarRespuesta;
+async function enviarRespuesta(){
+  const P=S.pendiente, p=S.preguntas[S.idx]; if(!P) return;
+  err('e-preg',''); $('b-reint').classList.add('oculto'); vista('p-sub');
+  const datos=await aBase64(P.blob);
+  const r=await api('subir_respuesta',{etapa:S.etapa,id_pregunta:p.id,tipo:S.tipo,mime:P.mime,duracion_s:P.duracion,
+                                       transcripcion:P.texto,archivo_base64:datos});
+  if(!r.ok){
+    if(errorGlobal(r)) return;
+    vista('p-rev'); err('e-preg',(r.mensaje||'No se pudo guardar.')+' Pulsa "Reintentar envío"; tu grabación sigue en esta página.');
+    $('b-reint').classList.remove('oculto'); $('b-env').classList.add('oculto'); return;
+  }
+  $('b-env').classList.remove('oculto'); S.pendiente=null; p.estado='Verificado';
+  if(r.etapa_completa) return entrarEtapa(r.siguiente_etapa||S.etapa+1);
+  const i=S.preguntas.findIndex(q=>q.estado!=='Verificado'); if(i<0) return entrarEtapa(S.etapa+1);
+  S.idx=i; mostrarPregunta();
+}
+
+function hablar(texto){
+  if(!('speechSynthesis' in window)) return; cancelarVoz();
+  const u=new SpeechSynthesisUtterance(texto); u.lang='es-MX'; u.rate=0.95;
+  const v=speechSynthesis.getVoices().find(v=>/^es[-_]MX/i.test(v.lang))||speechSynthesis.getVoices().find(v=>/^es/i.test(v.lang)); if(v) u.voice=v;
+  speechSynthesis.speak(u);
+}
+function cancelarVoz(){ if('speechSynthesis' in window) speechSynthesis.cancel(); }
+
+/* =====================================================================
+   ETAPA 3: NEGOCIACIÓN CON EL CEO (Gemini corre en el servidor)
+   ===================================================================== */
+async function iniciarChat(){
+  err('e-inst3','');
+  const c=await api('chat_contexto'); if(!c.ok){ if(!errorGlobal(c)) err('e-inst3',c.mensaje); return; }
+  S.chat={mensajes:c.mensajes||[],turnos:c.turnos_completos||0,puede_cerrar:!!c.puede_cerrar};
+  $('chat').innerHTML=''; S.chat.mensajes.forEach(m=>pintar(m.rol,m.mensaje)); actualizarTurnos(); mostrar('s-chat');
+  const ult=S.chat.mensajes[S.chat.mensajes.length-1];
+  if(!ult || (ult.rol==='Alumno' && S.chat.turnos<MAX_TURNOS)) await turnoCEO();
+}
+function pintar(rol,texto){
+  const d=document.createElement('div'); d.className='m '+(rol==='CEO'?'ceo':'alumno');
+  const s=document.createElement('small'); s.textContent=rol==='CEO'?'CEO':'Tú'; d.appendChild(s); d.appendChild(document.createTextNode(texto));
+  $('chat').appendChild(d); $('chat').scrollTop=$('chat').scrollHeight;
+}
+function actualizarTurnos(){
+  $('t-turnos').textContent='Turnos completados: '+S.chat.turnos+' (mínimo '+MIN_TURNOS+', máximo '+MAX_TURNOS+')';
+  $('b-cerrar').classList.toggle('oculto',!(S.chat.puede_cerrar||S.chat.turnos>=MAX_TURNOS));
+  $('i-msg').disabled=S.chat.turnos>=MAX_TURNOS; $('b-msg').disabled=S.chat.turnos>=MAX_TURNOS;
+}
+async function turnoCEO(){
+  $('b-ceo-reint').classList.add('oculto');
+  $('b-msg').disabled=true; $('i-msg').disabled=true; $('t-turnos').textContent='El CEO está escribiendo…';
+  const r=await api('chat_ceo');
+  if(!r.ok){
+    if(errorGlobal(r)) return;
+    err('e-chat',r.mensaje); $('t-turnos').textContent='';
+    $('b-ceo-reint').classList.remove('oculto');   // el campo sigue bloqueado hasta que el CEO responda
+    return;
+  }
+  S.chat.mensajes.push({rol:'CEO',mensaje:r.mensaje}); pintar('CEO',r.mensaje);
+  S.chat.turnos=r.turnos_completos; S.chat.puede_cerrar=!!r.puede_cerrar; err('e-chat',''); actualizarTurnos(); $('i-msg').focus();
+}
+$('b-ceo-reint').onclick = ()=>{ err('e-chat',''); turnoCEO(); };
+$('b-msg').onclick = async ()=>{
+  const t=$('i-msg').value.trim(); if(!t) return; err('e-chat','');
+  $('b-msg').disabled=true; $('i-msg').disabled=true;
+  const r=await api('chat_guardar',{rol:'Alumno',mensaje:t});
+  if(!r.ok){ $('b-msg').disabled=false; $('i-msg').disabled=false; if(!errorGlobal(r)) err('e-chat',r.mensaje); return; }
+  S.chat.mensajes.push({rol:'Alumno',mensaje:t}); pintar('Alumno',t); $('i-msg').value='';
+  S.chat.turnos=r.turnos_completos; S.chat.puede_cerrar=!!r.puede_cerrar; actualizarTurnos();
+  if(S.chat.turnos<MAX_TURNOS) await turnoCEO();
+};
+$('b-cerrar').onclick = async ()=>{
+  $('b-cerrar').disabled=true; const r=await api('chat_cerrar');
+  $('b-cerrar').disabled=false;
+  if(!r.ok){ if(!errorGlobal(r)) err('e-chat',r.mensaje); return; }
+  finalizarExamen();
+};
+
+/* =====================================================================
+   FINAL: la calificación provisional la calcula el servidor
+   ===================================================================== */
+async function finalizarExamen(){
+  mostrar('s-final'); err('e-final',''); $('b-final-reint').classList.add('oculto'); $('f-res').classList.add('oculto');
+  $('f-estado').textContent='Estamos verificando tus grabaciones y calculando tu calificación provisional… puede tardar hasta un minuto.';
+  const r=await api('finalizar');
+  if(!r.ok){ if(!errorGlobal(r)){ err('e-final',r.mensaje); $('b-final-reint').classList.remove('oculto'); } return; }
+  try{ localStorage.removeItem(LS); }catch(_){}
+  clearInterval(S.hb); clearInterval(S.tick); $('crono').classList.add('oculto'); banner('');
+  $('f-estado').textContent='Tu examen fue entregado correctamente.';
+  $('f-nota').textContent=Number(r.nota_10).toFixed(1)+' / 10'; $('f-retro').textContent=r.retroalimentacion||'';
+  $('f-res').classList.remove('oculto');
+}
+$('b-final-reint').onclick = finalizarExamen;
+
+/* =====================================================================
+   ARRANQUE
+   ===================================================================== */
+(async function arrancar(){
+  if(!EN_APPS_SCRIPT && !API_CONFIGURADA){
+    bloquear('Enlace no válido','Este examen debe abrirse desde el enlace oficial que te compartió tu profesor.');
+    return;
+  }
+  mostrar('s-acceso');
+  const r=await api('ping');
+  if(!r.ok) banner('No se pudo conectar con el servidor. Recarga la página.','error');
+})();
+</script>
+</body>
+</html>
