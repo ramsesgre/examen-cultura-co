@@ -530,7 +530,7 @@ function iniciarTranscripcion(){
   }catch(_){ return null; }
 }
 
-function aBase64(blob){ return new Promise((ok,ko)=>{ const f=new FileReader(); f.onload=()=>ok(String(f.result).split(',')[1]); f.onerror=ko; f.readAsDataURL(blob); }); }
+function aBase64(blob){ return new Promise((ok,ko)=>{ const f=new FileReader(); f.onload=()=>{ const t=String(f.result); ok(t.slice(t.indexOf('base64,')+7)); }; f.onerror=ko; f.readAsDataURL(blob); }); }
 $('b-env').onclick = enviarRespuesta;
 $('b-reint').onclick = enviarRespuesta;
 async function enviarRespuesta(){
