@@ -238,7 +238,7 @@
   <p id="bl-texto"></p>
 </section>
 </main>
-<footer>Culture Under Pressure · Evaluación de Cultura Organizacional</footer>
+<footer>Culture Under Pressure · Evaluación de Cultura Organizacional · v3</footer>
 
 <script>
 'use strict';
@@ -541,7 +541,7 @@ async function enviarRespuesta(){
                                        transcripcion:P.texto,archivo_base64:datos});
   if(!r.ok){
     if(errorGlobal(r)) return;
-    vista('p-rev'); err('e-preg',(r.mensaje||'No se pudo guardar.')+' Pulsa "Reintentar envío"; tu grabación sigue en esta página.');
+    vista('p-rev'); err('e-preg',(r.mensaje||'No se pudo guardar.')+' Pulsa "Reintentar envío"; tu grabación sigue en esta página. [diagnóstico: '+(r.codigo||'?')+', enviado '+datos.length+' caracteres, inicio "'+String(datos).slice(0,12)+'"]');
     $('b-reint').classList.remove('oculto'); $('b-env').classList.add('oculto'); return;
   }
   $('b-env').classList.remove('oculto'); S.pendiente=null; p.estado='Verificado';
@@ -640,3 +640,4 @@ $('b-final-reint').onclick = finalizarExamen;
 </script>
 </body>
 </html>
+
