@@ -60,7 +60,7 @@
 <body>
 <header>
   <span class="marca">CULTURE UNDER PRESSURE</span>
-  <span id="crono" class="oculto">⏱ --:--</span>
+  <span style="display:flex;gap:10px;align-items:center"><button id="b-saltar" class="oculto" style="margin:0;padding:6px 12px;font-size:13px;background:#fff;color:#1F3864">Siguiente etapa (Maestro) ⏭</button><span id="crono" class="oculto">⏱ --:--</span></span>
 </header>
 <div id="banner" class="oculto"></div>
 
@@ -97,18 +97,18 @@
     <ul>
       <li>Datos de identificación: número de cuenta, nombre y correo institucional.</li>
       <li>Tu <b>voz</b> (grabaciones de audio) y tu <b>imagen</b> (grabaciones de video con audio) durante las etapas 1 y 2.</li>
-      <li>Las <b>transcripciones</b> de esas grabaciones, tus <b>respuestas escritas</b> y la <b>conversación completa</b> de la etapa 3.</li>
+      <li>Las <b>transcripciones</b> de esas grabaciones.</li>
       <li>Datos técnicos de la sesión: fecha y hora de entrada y salida, avance, y si cámara y micrófono funcionaron. La comprobación de permisos <b>no</b> se graba.</li>
     </ul>
     <h2>3. Para qué se usan</h2>
     <p>Únicamente para aplicar y evaluar este examen: verificar tu identidad, recuperar tu avance si se interrumpe tu conexión, calcular una <b>calificación provisional</b> y permitir que tu profesor la revise. No se usan para fines publicitarios ni se venden o ceden a terceros con otros fines.</p>
     <h2>4. Uso de inteligencia artificial</h2>
-    <p>Un sistema de inteligencia artificial (Gemini) genera las preguntas del interlocutor de la etapa 3, transcribe o analiza tus respuestas y propone una calificación <b>provisional</b>. Esa calificación <b>no es definitiva</b>: tu profesor puede revisarla y modificarla.</p>
+    <p>Un sistema de inteligencia artificial (Gemini) analiza tus respuestas y propone una calificación <b>provisional</b>. Esa calificación <b>no es definitiva</b>: tu profesor puede revisarla y modificarla.</p>
     <h2>5. Dónde se almacenan y quién interviene</h2>
     <p>La información se almacena en servicios de Google (Drive, Hojas de cálculo y Apps Script) administrados por el profesor, y se procesa con la API de Gemini de Google. Esos proveedores tienen sus propias condiciones y plazos técnicos de conservación, ajenos al control del profesor.</p>
     <h2>6. Cuánto tiempo se conservan</h2>
     <ul>
-      <li>Las grabaciones, transcripciones y conversaciones se eliminan dentro de los <b>7 días naturales</b> posteriores a la aplicación del examen.</li>
+      <li>Las grabaciones y transcripciones se eliminan dentro de los <b>7 días naturales</b> posteriores a la aplicación del examen.</li>
       <li>Si durante esos 7 días solicitas la <b>revisión de tu calificación</b> o presentas una queja, se conservarán únicamente hasta que se resuelva y después se eliminarán.</li>
       <li>Tu calificación académica se conserva conforme a la normativa de la institución.</li>
     </ul>
@@ -164,19 +164,6 @@
   <div class="err" id="e-inst2"></div>
 </section>
 
-<section id="s-inst3" class="pantalla">
-  <h1>Etapa 3 · Negociación con el CEO</h1>
-  <p class="sub">Conversarás por escrito con el director general de una empresa ficticia que necesita reestructurar su cultura organizacional.</p>
-  <ul class="reglas">
-    <li>Tú representas a la jefatura de cultura organizacional; el CEO tiene sus propios intereses.</li>
-    <li>La conversación debe tener <b>al menos <span class="k-min">12</span> turnos</b> (un turno = un mensaje del CEO y tu respuesta). El máximo es de <span class="k-max">20</span>.</li>
-    <li>Para cerrar con éxito debes llegar a una solución que incluya: <b>diagnóstico, causas, solución, viabilidad, ética, indicadores y plan de implementación</b>.</li>
-    <li>Si no se alcanza una solución, tu profesor revisará la conversación; no quedarás bloqueada o bloqueado.</li>
-  </ul>
-  <button id="b-et3">Comenzar etapa 3</button>
-  <div class="err" id="e-inst3"></div>
-</section>
-
 <!-- PREGUNTA (audio / video) -->
 <section id="s-preg" class="pantalla">
   <h1 id="p-titulo"></h1>
@@ -207,18 +194,6 @@
   <button id="b-reint" class="oculto">Reintentar envío</button>
 </section>
 
-<!-- CHAT -->
-<section id="s-chat" class="pantalla">
-  <h1>Etapa 3 · Negociación</h1>
-  <p class="estado" id="t-turnos"></p>
-  <div class="chat" id="chat"></div>
-  <textarea id="i-msg" placeholder="Escribe tu respuesta al CEO…"></textarea>
-  <button id="b-msg">Enviar</button>
-  <button id="b-ceo-reint" class="sec oculto">Reintentar respuesta del CEO</button>
-  <button id="b-cerrar" class="sec oculto">Finalizar negociación</button>
-  <div class="err" id="e-chat"></div>
-</section>
-
 <!-- FINAL -->
 <section id="s-final" class="pantalla">
   <h1>Has terminado el examen</h1>
@@ -238,7 +213,7 @@
   <p id="bl-texto"></p>
 </section>
 </main>
-<footer>Culture Under Pressure · Evaluación de Cultura Organizacional · v3</footer>
+<footer>Culture Under Pressure · Evaluación de Cultura Organizacional · v4</footer>
 
 <script>
 'use strict';
@@ -253,17 +228,17 @@ const EN_APPS_SCRIPT = (typeof google !== 'undefined') && google.script && googl
 const API_URL = 'https://script.google.com/macros/s/AKfycbzUQS_TY8WJg52Mdhdug2UiN9Ui_jY3FhJyjKGADKaaRK5S63wuBXyypGrOXqyaelTRow/exec';
 const API_CONFIGURADA = /^https:\/\/script\.google\.com\/macros\/s\/[^\s]+\/exec$/.test(API_URL);
 // Estos valores son solo de arranque: al iniciar sesión se reemplazan por los de la pestaña Config.
-let LIM_AUDIO = 30, LIM_VIDEO = 60, MIN_TURNOS = 12, MAX_TURNOS = 20, N_E1 = 6, N_E2 = 3;
+let LIM_AUDIO = 30, LIM_VIDEO = 60, N_E1 = 10, N_E2 = 6;
 function aplicarConfig(c){
   if(!c) return;
-  N_E1=c.n_e1; N_E2=c.n_e2; LIM_AUDIO=c.seg_e1; LIM_VIDEO=c.seg_e2; MIN_TURNOS=c.turnos_min; MAX_TURNOS=c.turnos_max;
+  N_E1=c.n_e1; N_E2=c.n_e2; LIM_AUDIO=c.seg_e1; LIM_VIDEO=c.seg_e2;
 }
 
 /* =====================================================================
    ESTADO
    ===================================================================== */
 const S = { cuenta:'', nombre:'', session_id:'', token:'', etapa:1, restantes:null, preguntas:[], idx:0,
-            tipo:'audio', rec:null, pendiente:null, chat:{mensajes:[],turnos:0,puede_cerrar:false}, hb:null, tick:null, bloqueado:false };
+            tipo:'audio', rec:null, pendiente:null, rol:'', hb:null, tick:null, bloqueado:false };
 const $ = id => document.getElementById(id);
 const LS = 'cup_sesion_v1';
 
@@ -361,6 +336,7 @@ $('b-si').onclick = async ()=>{
   $('b-si').disabled=false; $('b-no').disabled=false;
   if(!r.ok){ if(!errorGlobal(r)) err('e-codigo', r.mensaje); return; }
   S.session_id=r.session_id; S.token=r.token; S.etapa=r.etapa_actual; S.restantes=r.segundos_restantes; aplicarConfig(r.config);
+  S.rol=r.rol; $('b-saltar').classList.toggle('oculto', r.rol!=='Maestro');
   try{ localStorage.setItem(LS,JSON.stringify({cuenta:S.cuenta,session_id:r.session_id,token:r.token})); }catch(_){}
   iniciarReloj(); $('crono').textContent='⏱ '+fmt(S.restantes);
   if(r.reanudada) banner('Recuperamos tu avance. Continúa donde te quedaste.','info');
@@ -415,15 +391,21 @@ $('b-perm-sig').onclick = async ()=>{
 function entrarEtapa(n){
   S.etapa=n;
   const poner=(cl,v)=>document.querySelectorAll(cl).forEach(e=>e.textContent=v);
-  poner('.k-min',MIN_TURNOS); poner('.k-max',MAX_TURNOS); poner('.k-n1',N_E1); poner('.k-n2',N_E2); poner('.k-s1',LIM_AUDIO); poner('.k-s2',LIM_VIDEO);
+  poner('.k-n1',N_E1); poner('.k-n2',N_E2); poner('.k-s1',LIM_AUDIO); poner('.k-s2',LIM_VIDEO);
   if(n<=1) return mostrar('s-inst1');
   if(n===2) return mostrar('s-inst2');
-  if(n===3) return mostrar('s-inst3');
-  return finalizarExamen();
+  return finalizarExamen();          // ya no hay etapa 3: después del video se califica
 }
 $('b-et1').onclick = ()=>cargarPreguntas(1,'audio','e-inst1');
 $('b-et2').onclick = ()=>cargarPreguntas(2,'video','e-inst2');
-$('b-et3').onclick = ()=>iniciarChat();
+// Solo la cuenta Maestro ve este botón (y el servidor lo vuelve a validar con la hoja)
+$('b-saltar').onclick = async ()=>{
+  if(S.rec&&S.rec.activo) return;
+  if(!confirm('¿Pasar a la siguiente etapa sin terminar la actual? (solo cuenta Maestro)')) return;
+  cancelarVoz();
+  const r=await api('maestro_saltar'); if(!r.ok){ if(!errorGlobal(r)) alert(r.mensaje); return; }
+  entrarEtapa(r.etapa_actual);
+};
 
 async function cargarPreguntas(etapa,tipo,errId){
   err(errId,'');
@@ -559,57 +541,6 @@ function hablar(texto){
 function cancelarVoz(){ if('speechSynthesis' in window) speechSynthesis.cancel(); }
 
 /* =====================================================================
-   ETAPA 3: NEGOCIACIÓN CON EL CEO (Gemini corre en el servidor)
-   ===================================================================== */
-async function iniciarChat(){
-  err('e-inst3','');
-  const c=await api('chat_contexto'); if(!c.ok){ if(!errorGlobal(c)) err('e-inst3',c.mensaje); return; }
-  S.chat={mensajes:c.mensajes||[],turnos:c.turnos_completos||0,puede_cerrar:!!c.puede_cerrar};
-  $('chat').innerHTML=''; S.chat.mensajes.forEach(m=>pintar(m.rol,m.mensaje)); actualizarTurnos(); mostrar('s-chat');
-  const ult=S.chat.mensajes[S.chat.mensajes.length-1];
-  if(!ult || (ult.rol==='Alumno' && S.chat.turnos<MAX_TURNOS)) await turnoCEO();
-}
-function pintar(rol,texto){
-  const d=document.createElement('div'); d.className='m '+(rol==='CEO'?'ceo':'alumno');
-  const s=document.createElement('small'); s.textContent=rol==='CEO'?'CEO':'Tú'; d.appendChild(s); d.appendChild(document.createTextNode(texto));
-  $('chat').appendChild(d); $('chat').scrollTop=$('chat').scrollHeight;
-}
-function actualizarTurnos(){
-  $('t-turnos').textContent='Turnos completados: '+S.chat.turnos+' (mínimo '+MIN_TURNOS+', máximo '+MAX_TURNOS+')';
-  $('b-cerrar').classList.toggle('oculto',!(S.chat.puede_cerrar||S.chat.turnos>=MAX_TURNOS));
-  $('i-msg').disabled=S.chat.turnos>=MAX_TURNOS; $('b-msg').disabled=S.chat.turnos>=MAX_TURNOS;
-}
-async function turnoCEO(){
-  $('b-ceo-reint').classList.add('oculto');
-  $('b-msg').disabled=true; $('i-msg').disabled=true; $('t-turnos').textContent='El CEO está escribiendo…';
-  const r=await api('chat_ceo');
-  if(!r.ok){
-    if(errorGlobal(r)) return;
-    err('e-chat',r.mensaje); $('t-turnos').textContent='';
-    $('b-ceo-reint').classList.remove('oculto');   // el campo sigue bloqueado hasta que el CEO responda
-    return;
-  }
-  S.chat.mensajes.push({rol:'CEO',mensaje:r.mensaje}); pintar('CEO',r.mensaje);
-  S.chat.turnos=r.turnos_completos; S.chat.puede_cerrar=!!r.puede_cerrar; err('e-chat',''); actualizarTurnos(); $('i-msg').focus();
-}
-$('b-ceo-reint').onclick = ()=>{ err('e-chat',''); turnoCEO(); };
-$('b-msg').onclick = async ()=>{
-  const t=$('i-msg').value.trim(); if(!t) return; err('e-chat','');
-  $('b-msg').disabled=true; $('i-msg').disabled=true;
-  const r=await api('chat_guardar',{rol:'Alumno',mensaje:t});
-  if(!r.ok){ $('b-msg').disabled=false; $('i-msg').disabled=false; if(!errorGlobal(r)) err('e-chat',r.mensaje); return; }
-  S.chat.mensajes.push({rol:'Alumno',mensaje:t}); pintar('Alumno',t); $('i-msg').value='';
-  S.chat.turnos=r.turnos_completos; S.chat.puede_cerrar=!!r.puede_cerrar; actualizarTurnos();
-  if(S.chat.turnos<MAX_TURNOS) await turnoCEO();
-};
-$('b-cerrar').onclick = async ()=>{
-  $('b-cerrar').disabled=true; const r=await api('chat_cerrar');
-  $('b-cerrar').disabled=false;
-  if(!r.ok){ if(!errorGlobal(r)) err('e-chat',r.mensaje); return; }
-  finalizarExamen();
-};
-
-/* =====================================================================
    FINAL: la calificación provisional la calcula el servidor
    ===================================================================== */
 async function finalizarExamen(){
@@ -640,4 +571,3 @@ $('b-final-reint').onclick = finalizarExamen;
 </script>
 </body>
 </html>
-
